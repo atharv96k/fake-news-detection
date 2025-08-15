@@ -29,7 +29,7 @@ app.post("/fact-check", async (req, res) => {
       Claim: ${query}`,
     });
 
-    // console.log("Perplexity response:", text);
+    console.log("Perplexity response:", text);
 
     // Safely extract JSON from response
     const jsonStart = text.indexOf("{");

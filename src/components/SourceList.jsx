@@ -1,7 +1,6 @@
 import { ExternalLink } from 'lucide-react';
 
 export default function SourceList({ sources }) {
-  console.log("Sources from backend:", sources.url);
   return (
     <div className="space-y-4">
       {sources.map((source, index) => (
