@@ -11,7 +11,7 @@ app.use(express.json());
 
 // Allow requests from frontend
 app.use(cors({
-  origin: "http://localhost:5173" // your React frontend URL
+  origin: "https://fake-news-detection-psbo.vercel.app/" // your React frontend URL
 }));
 
 app.post("/fact-check", async (req, res) => {
