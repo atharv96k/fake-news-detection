@@ -17,7 +17,7 @@ export default function DetectionPage() {
     setResult(null);
 
     try {
-      const response = await fetch('http://localhost:5000/fact-check', {
+      const response = await fetch('https://fake-news-detection-n9cs.onrender.com/fact-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: newsText })
