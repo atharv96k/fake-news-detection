@@ -4,6 +4,7 @@ import Homepage from './pages/HomePage';
 import SourcePage from './pages/SourcePage'; // ← import the new page
 import Footer from './components/Footer';
 import DetectionPage from './pages/DetectionPage';
+import './App.css'; // Import your CSS file
 
 export default function App() {
   return (
