@@ -15,9 +15,9 @@ export default function DetectionPage() {
     setIsLoading(true);
     setError('');
     setResult(null);
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://fake-news-detection-n9cs.onrender.com";
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/fact-check`, {
+      const response = await fetch(`${API_BASE}/fact-check`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: newsText })
