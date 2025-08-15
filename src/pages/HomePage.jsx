@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import trustedSources from "../data/trustedSources.js";
-import heroImg from "../assets/hero_news.svg"; // news illustration
-import newsInputIcon from "../assets/news-input.svg";
-import aiAnalysisIcon from "../assets/ai-analysis.svg";
-import verdictIcon from "../assets/verdict.svg";
+import heroImg from "/icons/hero_news.svg"; // news illustration
+import newsInputIcon from "/icons/news-input.svg";
+import aiAnalysisIcon from "/icons/ai-analysis.svg";
+import verdictIcon from "/icons/verdict.svg";
 
 export default function Homepage() {
   return (
