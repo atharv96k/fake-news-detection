@@ -17,10 +17,10 @@ export default function DetectionPage() {
     setResult(null);
 
     try {
-      const response = await fetch('https://fake-news-detection-n9cs.onrender.com/fact-check', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: newsText })
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/fact-check`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
       });
 
       if (!response.ok) throw new Error('Failed to fetch verdict');
@@ -49,7 +49,7 @@ export default function DetectionPage() {
       setError('Error fetching verdict. Please try again.');
     }
 
-    setIsLoading(false);  
+    setIsLoading(false);
   };
 
   return (
