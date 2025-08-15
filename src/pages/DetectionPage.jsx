@@ -15,7 +15,7 @@ export default function DetectionPage() {
     setIsLoading(true);
     setError('');
     setResult(null);
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://fake-news-detection-n9cs.onrender.com";
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://fake-news-detection-n9cs.onrender.com";
     try {
       const response = await fetch(`${API_BASE}/fact-check`, {
         method: "POST",
@@ -38,12 +38,12 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://fake-news-detecti
             : 'This claim could not be verified with high certainty.',
         sources: data.top_3_sources.map(src => ({
           title: src.title,
-          url: src.url,
+          // Force https:// if missing
+          url: src.url && src.url.startsWith('http') ? src.url : `https://${src.url}`,
           summary: '' // Optional: fetch article summaries later
         })),
         highlightedKeywords: newsText.split(' ').filter(word => word.length > 6)
       });
-
     } catch (err) {
       console.error(err);
       setError('Error fetching verdict. Please try again.');

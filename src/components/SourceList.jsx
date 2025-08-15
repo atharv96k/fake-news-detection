@@ -13,7 +13,7 @@ export default function SourceList({ sources }) {
               className="text-emerald-600 hover:text-emerald-800 font-semibold flex items-center gap-1"
             >
               {source.title}
-              <ExternalLink size={14} />
+              <ExternalLink size={16} />
             </a>
             <p className="text-gray-600 text-sm mt-1 leading-relaxed">{source.summary}</p>
           </div>
