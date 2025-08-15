@@ -20,7 +20,7 @@ export default function DetectionPage() {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/fact-check`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query })
+        body: JSON.stringify({ query: newsText })
       });
 
       if (!response.ok) throw new Error('Failed to fetch verdict');
