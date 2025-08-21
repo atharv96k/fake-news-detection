@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Search, Loader2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search } from 'lucide-react';
 import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
@@ -7,15 +7,32 @@ import SourceList from '../components/SourceList';
 export default function DetectionPage() {
   const [newsText, setNewsText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const intervalRef = useRef(null);
+
+  // Using your custom SVGs from public/icons
+  const steps = [
+    { text: "Processing Text", icon: "/icons/preprocess.svg" },
+    { text: "Fetching Evidence from Trusted Sources", icon: "/icons/search.svg" },
+    { text: "Running AI Analysis", icon: "/icons/ai.svg" },
+    { text: "Generating Verdict", icon: "/icons/verdict1.svg" },
+  ];
 
   const checkNews = async () => {
     if (!newsText.trim()) return;
     setIsLoading(true);
     setError('');
     setResult(null);
-    const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://fake-news-detection-n9cs.onrender.com";
+    setCurrentStep(0);
+
+    // Step cycling
+    intervalRef.current = setInterval(() => {
+      setCurrentStep(prev => (prev + 1 < steps.length ? prev + 1 : prev));
+    }, 1000);
+
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://fake-news-detection-n9cs.onrender.com';
     try {
       const response = await fetch(`${API_BASE}/fact-check`, {
         method: "POST",
@@ -27,9 +44,8 @@ export default function DetectionPage() {
 
       const data = await response.json();
 
-      // Map API response to UI format
       setResult({
-        verdict: data.verdict.toLowerCase(), // fake/true/mixed
+        verdict: data.verdict.toLowerCase(),
         confidence: data.confidence_percentage,
         explanation: data.verdict.toLowerCase() === 'fake'
           ? 'Independent fact-checking confirms this claim is false based on multiple credible sources.'
@@ -38,18 +54,19 @@ export default function DetectionPage() {
             : 'This claim could not be verified with high certainty.',
         sources: data.top_3_sources.map(src => ({
           title: src.title,
-          // Force https:// if missing
           url: src.url && src.url.startsWith('http') ? src.url : `https://${src.url}`,
-          summary: '' // Optional: fetch article summaries later
+          summary: ''
         })),
         highlightedKeywords: newsText.split(' ').filter(word => word.length > 6)
       });
     } catch (err) {
       console.error(err);
       setError('Error fetching verdict. Please try again.');
+    } finally {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -67,17 +84,23 @@ export default function DetectionPage() {
             placeholder="Paste your news headline or article here..."
             disabled={isLoading}
           />
-          <button
-            onClick={checkNews}
-            disabled={!newsText.trim() || isLoading}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2"
-          >
-            {isLoading ? (
-              <><Loader2 size={20} className="animate-spin" /> Analyzing...</>
-            ) : (
-              <><Search size={20} /> Check News</>
-            )}
-          </button>
+
+          {!isLoading ? (
+            <button
+              onClick={checkNews}
+              disabled={!newsText.trim()}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-all"
+            >
+              <Search size={20} /> Check News
+            </button>
+          ) : (
+            <div
+              className="w-full bg-emerald-600 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-3 animate-pulse"
+            >
+              <img src={steps[currentStep].icon} alt="step icon" className="w-5 h-5" />
+              {steps[currentStep].text}
+            </div>
+          )}
         </div>
 
         {error && <p className="text-red-600 mb-4">{error}</p>}
