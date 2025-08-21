@@ -5,10 +5,12 @@ import SourcePage from './pages/SourcePage'; // ← import the new page
 import Footer from './components/Footer';
 import DetectionPage from './pages/DetectionPage';
 import './App.css'; // Import your CSS file
+import ScrollToTop from './components/ScrollToTop';
 
 export default function App() {
   return (
     <Router>
+      <ScrollToTop   />
       <Navbar />
       <Routes>
         <Route path="/" element={<Homepage />} />

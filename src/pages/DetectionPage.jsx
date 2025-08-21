@@ -15,9 +15,9 @@ export default function DetectionPage() {
   // Using your custom SVGs from public/icons
   const steps = [
     { text: "Processing Text", icon: "/icons/preprocess.svg" },
-    { text: "Fetching Evidence from Trusted Sources", icon: "/icons/search.svg" },
-    { text: "Running AI Analysis", icon: "/icons/ai.svg" },
-    { text: "Generating Verdict", icon: "/icons/verdict1.svg" },
+    { text: "Fetching Evidence", icon: "/icons/search.svg" },
+    { text: "AI Analysis", icon: "/icons/ai.svg" },
+    { text: "Final Verdict", icon: "/icons/verdict1.svg" },
   ];
 
   const checkNews = async () => {

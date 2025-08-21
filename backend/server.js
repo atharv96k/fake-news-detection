@@ -37,6 +37,14 @@ app.post("/fact-check", async (req, res) => {
     const jsonText = text.slice(jsonStart, jsonEnd);
 
     const data = JSON.parse(jsonText); // Safe parse
+
+  if (data.top_3_sources) {
+      data.top_3_sources = data.top_3_sources.map(src => ({
+        title: src.title,
+        url: src.url || src.URL,   // convert URL → url
+        summary: src.summary || "",
+      }));
+    }
     res.json(data);
 
   } catch (error) {
