@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search } from 'lucide-react';
+import { Search, ExternalLink, ChevronDown, AlertTriangle } from 'lucide-react';
 import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
@@ -11,8 +11,8 @@ export default function DetectionPage() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const intervalRef = useRef(null);
+  const [expandedSource, setExpandedSource] = useState(null);
 
-  // Using your custom SVGs from public/icons
   const steps = [
     { text: "Processing Text", icon: "/icons/preprocess.svg" },
     { text: "Fetching Evidence", icon: "/icons/search.svg" },
@@ -27,10 +27,9 @@ export default function DetectionPage() {
     setResult(null);
     setCurrentStep(0);
 
-    // Step cycling
     intervalRef.current = setInterval(() => {
       setCurrentStep(prev => (prev + 1 < steps.length ? prev + 1 : prev));
-    }, 1300);
+    }, 1600); // slightly faster cycle
 
     const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://fake-news-detection-n9cs.onrender.com';
     try {
@@ -47,15 +46,16 @@ export default function DetectionPage() {
       setResult({
         verdict: data.verdict.toLowerCase(),
         confidence: data.confidence_percentage,
-        explanation: data.verdict.toLowerCase() === 'fake'
-          ? 'Independent fact-checking confirms this claim is false based on multiple credible sources.'
-          : data.verdict.toLowerCase() === 'true'
-            ? 'This claim is likely true according to verified sources.'
-            : 'This claim could not be verified with high certainty.',
+        explanation: data.explanation || 
+          (data.verdict.toLowerCase() === 'fake'
+            ? 'Independent fact-checking confirms this claim is false based on multiple credible sources.'
+            : data.verdict.toLowerCase() === 'true'
+              ? 'This claim is likely true according to verified sources.'
+              : 'This claim could not be verified with high certainty.'),
         sources: data.top_3_sources.map(src => ({
           title: src.title,
           url: src.url && src.url.startsWith('http') ? src.url : `https://${src.url}`,
-          summary: ''
+          summary: src.summary || "No AI summary available."
         })),
         highlightedKeywords: newsText.split(' ').filter(word => word.length > 6)
       });
@@ -69,6 +69,16 @@ export default function DetectionPage() {
     }
   };
 
+  // Handle "alert before visiting source"
+  const handleVisitSource = (url) => {
+    const proceed = window.confirm(
+      `⚠️ You are about to visit an external source.\n\nDo you want to continue?`
+    );
+    if (proceed) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-15 px-6 relative">
       <div className="max-w-3xl mx-auto px-6">
@@ -76,11 +86,12 @@ export default function DetectionPage() {
           Fact Check Tool
         </h1>
 
+        {/* Input box */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
           <textarea
             value={newsText}
             onChange={(e) => setNewsText(e.target.value)}
-            className="w-full h-32 p-4 border border-gray-300 rounded-lg resize-none"
+            className="w-full h-32 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-emerald-500 transition"
             placeholder="Paste your news headline or article here..."
             disabled={isLoading}
           />
@@ -89,7 +100,7 @@ export default function DetectionPage() {
             <button
               onClick={checkNews}
               disabled={!newsText.trim()}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-all"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-all shadow-md"
             >
               <Search size={20} /> Check News
             </button>
@@ -103,8 +114,10 @@ export default function DetectionPage() {
           )}
         </div>
 
+        {/* Error */}
         {error && <p className="text-red-600 mb-4">{error}</p>}
 
+        {/* Results */}
         {result && (
           <div className="bg-white rounded-xl shadow-lg p-8">
             <div className="flex items-center justify-between mb-6">
@@ -113,10 +126,13 @@ export default function DetectionPage() {
             </div>
             <p className="mb-4 font-semibold">{result.confidence}% Confidence</p>
             <p className="italic mb-4">{result.explanation}</p>
+
+            {/* Highlighted Keywords */}
             <div className="mb-4">
               <HighlightedText text={newsText} keywords={result.highlightedKeywords} />
             </div>
-            <SourceList sources={result.sources} />
+
+           <SourceList sources={result.sources} onVisitSource={handleVisitSource} />
           </div>
         )}
       </div>

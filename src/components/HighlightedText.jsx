@@ -1,14 +1,26 @@
-export default function HighlightedText({ text, keywords }) {
-  if (!keywords || keywords.length === 0) return <>{text}</>;
+// HighlightedText.jsx
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); 
+}
 
-  let highlighted = text;
-  keywords.forEach(keyword => {
-    const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
-    highlighted = highlighted.replace(
-      regex,
-      `<mark class="bg-yellow-200 px-1 rounded">$&</mark>`
-    );
+export default function HighlightedText({ text, keywords }) {
+  let highlightedText = text;
+
+  keywords.forEach((keyword) => {
+    if (!keyword) return;
+
+    // Escape keyword properly
+    const safeKeyword = escapeRegex(keyword);
+    const regex = new RegExp(`\\b${safeKeyword}\\b`, "gi");
+
+    highlightedText = highlightedText.replace(regex, (match) => {
+      return `<mark class="bg-yellow-200">${match}</mark>`;
+    });
   });
 
-  return <span dangerouslySetInnerHTML={{ __html: highlighted }} />;
+  return (
+    <span
+      dangerouslySetInnerHTML={{ __html: highlightedText }}
+    />
+  );
 }
