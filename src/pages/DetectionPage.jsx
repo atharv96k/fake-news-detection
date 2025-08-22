@@ -30,7 +30,7 @@ export default function DetectionPage() {
     // Step cycling
     intervalRef.current = setInterval(() => {
       setCurrentStep(prev => (prev + 1 < steps.length ? prev + 1 : prev));
-    }, 1000);
+    }, 1300);
 
     const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://fake-news-detection-n9cs.onrender.com';
     try {
