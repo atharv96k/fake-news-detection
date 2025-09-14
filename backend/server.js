@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "https://fake-news-detection-psbo.vercel.app",
+    origin: "http://localhost:5173",
   })
 );
 
@@ -88,8 +88,6 @@ app.post("/fact-check", async (req, res) => {
 Claim: ${query}`,
     });
 
-    console.log("Perplexity response:", text);
-
     const jsonStart = text.indexOf("{");
     const jsonEnd = text.lastIndexOf("}") + 1;
     const jsonText = text.slice(jsonStart, jsonEnd);
@@ -135,4 +133,4 @@ app.get("/fact-check/enriched/:id", (req, res) => {
   res.json(result);
 });
 
-app.listen(5000, () => console.log("✅ Backend running on port 5000"));
+app.listen(5000, () => console.log("✅ Backend is Running Fine!!"));

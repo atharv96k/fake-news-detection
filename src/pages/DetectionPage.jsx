@@ -80,7 +80,7 @@ export default function DetectionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-15 px-6 relative">
+    <div className="min-h-screen bg-white py-15 px-6 relative">
       <div className="max-w-3xl mx-auto px-6">
         <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">
           Fact Check Tool
@@ -91,7 +91,7 @@ export default function DetectionPage() {
           <textarea
             value={newsText}
             onChange={(e) => setNewsText(e.target.value)}
-            className="w-full h-32 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-emerald-500 transition"
+            className="w-full h-32 p-4 border border-gray-900 rounded-lg resize-none"
             placeholder="Paste your news headline or article here..."
             disabled={isLoading}
           />
@@ -100,7 +100,7 @@ export default function DetectionPage() {
             <button
               onClick={checkNews}
               disabled={!newsText.trim()}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-all shadow-md"
+              className="w-full bg-blue-500 hover:bg-emerald-700 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-all shadow-md"
             >
               <Search size={20} /> Check News
             </button>
