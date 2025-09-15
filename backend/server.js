@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "https://fake-news-detection-psbo.vercel.app/",
+    origin: "https://fake-news-detection-psbo.vercel.app",
   })
 );
 
