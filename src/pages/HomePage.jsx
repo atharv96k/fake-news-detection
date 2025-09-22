@@ -17,15 +17,15 @@ export default function Homepage() {
         className="text-center py-20 px-6 relative bg-white"
       >
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-          Your All-in-One
+          AI-Powered
         </h1>
         <h1 className="text-4xl md:text-5xl font-bold leading-tight mt-2">
-          <span className="text-blue-500">AI-Powered Fact Verification</span> Platform
+          <span className="text-blue-500">Fact Verification</span> Platform
         </h1>
-        <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          Verify news and claims instantly with AI, receive credibility scores, and explore trusted sources with concise summaries.
-          Strengthen your ability to identify misinformation and build digital media awareness with confidence.
+        <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          Instantly verify news and claims with AI and get trusted, reliable results.
         </p>
+
 
         <img src={heroImg} alt="Hero illustration" className="mx-auto mt-12 w-80" />
 
