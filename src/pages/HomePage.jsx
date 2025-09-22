@@ -20,12 +20,13 @@ export default function Homepage() {
           Your All-in-One
         </h1>
         <h1 className="text-4xl md:text-5xl font-bold leading-tight mt-2">
-          <span className="text-blue-500">Fake News Detection</span> Platform
+          <span className="text-blue-500">AI-Powered Fact Verification</span> Platform
         </h1>
         <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          Detect fake news instantly, get credibility scores, and learn to identify misinformation like a pro.
-          Boost your media literacy by 10x.
+          Verify news and claims instantly with AI, receive credibility scores, and explore trusted sources with concise summaries.
+          Strengthen your ability to identify misinformation and build digital media awareness with confidence.
         </p>
+
         <img src={heroImg} alt="Hero illustration" className="mx-auto mt-12 w-80" />
 
         <div className="flex justify-center space-x-4 mt-10">
