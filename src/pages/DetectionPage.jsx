@@ -15,10 +15,10 @@ export default function DetectionPage() {
   const [expandedSource, setExpandedSource] = useState(null);
 
  const steps = [
-  { text: "Processing Text", icon: <FileText className="w-5 h-5"/> },
-  { text: "Fetching Evidence", icon: <Globe className="w-5 h-5"/> },
-  { text: "AI Analysis", icon: <BrainCircuit className="w-5 h-5"/> },
-  { text: "Final Verdict", icon: <BadgeCheck className="w-5 h-5"/> },
+  { text: "Processing Text", icon: <FileText className="w-5 h-5 text-purple-500" /> },
+  { text: "Fetching Evidence", icon: <Globe className="w-5 h-5 text-purple-500"/> },
+  { text: "AI Analysis", icon: <BrainCircuit className="w-5 h-5 text-purple-500"/> },
+  { text: "Final Verdict", icon: <BadgeCheck className="w-5 h-5 text-purple-500"/> },
 ];
 
   const checkNews = async () => {
