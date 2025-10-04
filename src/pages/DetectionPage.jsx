@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
-import { FileText, Globe, BrainCircuit, BadgeCheck, Search } from "lucide-react";
+import { FileText, Globe, BrainCircuit, Trophy, Search } from "lucide-react";
 
 
 export default function DetectionPage() {
