@@ -101,18 +101,19 @@ export default function DetectionPage() {
             <button
               onClick={checkNews}
               disabled={!newsText.trim()}
-              className="w-full bg-blue-500 hover:bg-blue-500  disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-all shadow-md"
+              className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-all shadow-md"
             >
               <Search size={20} /> Check News
             </button>
           ) : (
             <div
-              className="w-full bg-blue-500  text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-3 animate-pulse"
+              className="w-full bg-blue-500 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-3 animate-pulse"
             >
-              <img src={steps[currentStep].icon} alt="step icon" className="w-5 h-5" />
+              {steps[currentStep].icon}
               {steps[currentStep].text}
             </div>
           )}
+
         </div>
 
         {/* Error */}
