@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
-import { Loader2, Search, Bot, ShieldCheck } from "lucide-react";
+import { FileText, Globe, BrainCircuit, BadgeCheck, Search } from "lucide-react";
 
 
 export default function DetectionPage() {
@@ -14,12 +14,12 @@ export default function DetectionPage() {
   const intervalRef = useRef(null);
   const [expandedSource, setExpandedSource] = useState(null);
 
-  const steps = [
-    { text: "Processing Text", icon: <Loader2 className="w-10 h-10 text-blue-500" /> },
-    { text: "Fetching Evidence", icon: <Search className="w-10 h-10 text-green-500" /> },
-    { text: "AI Analysis", icon: <Bot className="w-10 h-10 text-purple-500" /> },
-    { text: "Final Verdict", icon: <ShieldCheck className="w-10 h-10 text-orange-500" /> },
-  ];
+ const steps = [
+  { text: "Processing Text", icon: <FileText size={20} /> },
+  { text: "Fetching Evidence", icon: <Globe size={20} /> },
+  { text: "AI Analysis", icon: <BrainCircuit size={20} /> },
+  { text: "Final Verdict", icon: <BadgeCheck size={20} /> },
+];
 
   const checkNews = async () => {
     if (!newsText.trim()) return;
