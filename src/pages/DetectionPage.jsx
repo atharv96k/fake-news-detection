@@ -3,10 +3,7 @@ import { Search, ExternalLink, ChevronDown, AlertTriangle } from 'lucide-react';
 import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
-import preprocessIcon from "/icons/preprocess.svg";
-import searchIcon from "/icons/search.svg";
-import aiIcon from "/icons/ai.svg";
-import verdictIcon from "/icons/verdict1.svg";
+import { FaSearch, FaCog, FaRobot, FaCheckCircle } from "react-icons/fa";
 
 export default function DetectionPage() {
   const [newsText, setNewsText] = useState('');
@@ -18,10 +15,10 @@ export default function DetectionPage() {
   const [expandedSource, setExpandedSource] = useState(null);
 
   const steps = [
-  { text: "Processing Text", icon: preprocessIcon },
-  { text: "Fetching Evidence", icon: searchIcon },
-  { text: "AI Analysis", icon: aiIcon },
-  { text: "Final Verdict", icon: verdictIcon },
+  { text: "Processing Text", icon: <FaCog className="w-8 h-8 text-blue-500" /> },
+  { text: "Fetching Evidence", icon: <FaSearch className="w-8 h-8 text-green-500" /> },
+  { text: "AI Analysis", icon: <FaRobot className="w-8 h-8 text-purple-500" /> },
+  { text: "Final Verdict", icon: <FaCheckCircle className="w-8 h-8 text-orange-500" /> },
 ];
 
   const checkNews = async () => {
