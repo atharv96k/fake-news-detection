@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, ExternalLink, ChevronDown, AlertTriangle } from 'lucide-react';
 import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
-import { FaSearch, FaCog, FaRobot, FaCheckCircle } from "react-icons/fa";
+import { Loader2, Search, Bot, ShieldCheck } from "lucide-react";
+
 
 export default function DetectionPage() {
   const [newsText, setNewsText] = useState('');
@@ -15,11 +15,11 @@ export default function DetectionPage() {
   const [expandedSource, setExpandedSource] = useState(null);
 
   const steps = [
-  { text: "Processing Text", icon: <FaCog className="w-8 h-8 text-blue-500" /> },
-  { text: "Fetching Evidence", icon: <FaSearch className="w-8 h-8 text-green-500" /> },
-  { text: "AI Analysis", icon: <FaRobot className="w-8 h-8 text-purple-500" /> },
-  { text: "Final Verdict", icon: <FaCheckCircle className="w-8 h-8 text-orange-500" /> },
-];
+    { text: "Processing Text", icon: <Loader2 className="w-10 h-10 text-blue-500" /> },
+    { text: "Fetching Evidence", icon: <Search className="w-10 h-10 text-green-500" /> },
+    { text: "AI Analysis", icon: <Bot className="w-10 h-10 text-purple-500" /> },
+    { text: "Final Verdict", icon: <ShieldCheck className="w-10 h-10 text-orange-500" /> },
+  ];
 
   const checkNews = async () => {
     if (!newsText.trim()) return;
@@ -47,7 +47,7 @@ export default function DetectionPage() {
       setResult({
         verdict: data.verdict.toLowerCase(),
         confidence: data.confidence_percentage,
-        explanation: data.explanation || 
+        explanation: data.explanation ||
           (data.verdict.toLowerCase() === 'fake'
             ? 'Independent fact-checking confirms this claim is false based on multiple credible sources.'
             : data.verdict.toLowerCase() === 'true'
@@ -133,7 +133,7 @@ export default function DetectionPage() {
               <HighlightedText text={newsText} keywords={result.highlightedKeywords} />
             </div>
 
-           <SourceList sources={result.sources} onVisitSource={handleVisitSource} />
+            <SourceList sources={result.sources} onVisitSource={handleVisitSource} />
           </div>
         )}
       </div>
