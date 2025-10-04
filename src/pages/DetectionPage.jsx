@@ -3,6 +3,10 @@ import { Search, ExternalLink, ChevronDown, AlertTriangle } from 'lucide-react';
 import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
+import preprocessIcon from "/icons/preprocess.svg";
+import searchIcon from "/icons/search.svg";
+import aiIcon from "/icons/ai.svg";
+import verdictIcon from "/icons/verdict1.svg";
 
 export default function DetectionPage() {
   const [newsText, setNewsText] = useState('');
@@ -14,11 +18,11 @@ export default function DetectionPage() {
   const [expandedSource, setExpandedSource] = useState(null);
 
   const steps = [
-    { text: "Processing Text", icon: "/icons/preprocess.svg" },
-    { text: "Fetching Evidence", icon: "/icons/search.svg" },
-    { text: "AI Analysis", icon: "/icons/ai.svg" },
-    { text: "Final Verdict", icon: "/icons/verdict1.svg" },
-  ];
+  { text: "Processing Text", icon: preprocessIcon },
+  { text: "Fetching Evidence", icon: searchIcon },
+  { text: "AI Analysis", icon: aiIcon },
+  { text: "Final Verdict", icon: verdictIcon },
+];
 
   const checkNews = async () => {
     if (!newsText.trim()) return;
