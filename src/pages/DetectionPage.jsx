@@ -174,7 +174,7 @@ export default function DetectionPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.4 }}
               >
-                <SourceList sources={result.sources}/>
+                <SourceList sources={result.sources}  />
               </motion.div>
             </motion.div>
           )}
