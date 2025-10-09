@@ -3,7 +3,7 @@ import Navbar from './components/Navbar';
 import Homepage from './pages/HomePage';
 import Footer from './components/Footer';
 import DetectionPage from './pages/DetectionPage';
-import './App.css'; // Import your CSS file
+import './App.css'; 
 import ScrollToTop from './components/ScrollToTop';
 import FirefoxExtensionPage from './components/FirefoxExtensionPage';
 

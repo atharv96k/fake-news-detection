@@ -1,25 +1,27 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
+import { Search } from 'lucide-react';
 import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
-import { FileText, Globe, BrainCircuit, Trophy, Search } from "lucide-react";
-
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function DetectionPage() {
   const [newsText, setNewsText] = useState('');
+  const [analyzedText, setAnalyzedText] = useState(''); // Freeze analyzed text
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const intervalRef = useRef(null);
-  const [expandedSource, setExpandedSource] = useState(null);
 
   const steps = [
-    { text: "Processing Text", icon: <FileText className="w-6 h-6 text-black-500" /> },
-    { text: "Fetching Evidence", icon: <Globe className="w-6 h-6 text-black-500" /> },
-    { text: "AI Analysis", icon: <BrainCircuit className="w-6 h-6 text-black-500" /> },
-    { text: "Final Verdict", icon: <Trophy className="w-6 h-6 text-black-500" /> },
+    { text: "Processing Text", icon: "/icons/preprocess.svg" },
+    { text: "Fetching Evidence", icon: "/icons/search.svg" },
+    { text: "AI Analysis", icon: "/icons/ai.svg" },
+    { text: "Final Verdict", icon: "/icons/verdict1.svg" },
   ];
+
+  const ANIMATION_DURATION = steps.length * 1200; // 1200ms per step
 
   const checkNews = async () => {
     if (!newsText.trim()) return;
@@ -27,22 +29,31 @@ export default function DetectionPage() {
     setError('');
     setResult(null);
     setCurrentStep(0);
+    setAnalyzedText(newsText); // Freeze input text
+
+    const animationStart = Date.now();
 
     intervalRef.current = setInterval(() => {
       setCurrentStep(prev => (prev + 1 < steps.length ? prev + 1 : prev));
-    }, 1600); // slightly faster cycle
+    }, 1600); 
 
     const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://fake-news-detection-n9cs.onrender.com';
     try {
       const response = await fetch(`${API_BASE}/fact-check`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: newsText })
+        body: JSON.stringify({ query: newsText }),
       });
 
       if (!response.ok) throw new Error('Failed to fetch verdict');
 
       const data = await response.json();
+
+      // ✅ Ensure animation plays fully
+      const elapsed = Date.now() - animationStart;
+      if (elapsed < ANIMATION_DURATION) {
+        await new Promise(resolve => setTimeout(resolve, ANIMATION_DURATION - elapsed));
+      }
 
       setResult({
         verdict: data.verdict.toLowerCase(),
@@ -58,7 +69,7 @@ export default function DetectionPage() {
           url: src.url && src.url.startsWith('http') ? src.url : `https://${src.url}`,
           summary: src.summary || "No AI summary available."
         })),
-        highlightedKeywords: newsText.split(' ').filter(word => word.length > 6)
+        highlightedKeywords: newsText.split(' ').filter(word => word.length > 6),
       });
     } catch (err) {
       console.error(err);
@@ -70,29 +81,20 @@ export default function DetectionPage() {
     }
   };
 
-  // Handle "alert before visiting source"
-  const handleVisitSource = (url) => {
-    const proceed = window.confirm(
-      `⚠️ You are about to visit an external source.\n\nDo you want to continue?`
-    );
-    if (proceed) {
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-white py-15 px-6 relative">
+    <div className="min-h-screen bg-white py-10 px-6 relative">
       <div className="max-w-3xl mx-auto px-6">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">
+        <h1 className="text-4xl font-black text-gray-900 mb-8 text-center">
           Fact Check Tool
         </h1>
 
-        {/* Input box */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+        {/* Input */}
+        <div className="bg-white border border-gray-200 rounded-xl p-8 mb-8">
           <textarea
             value={newsText}
             onChange={(e) => setNewsText(e.target.value)}
-            className="w-full h-32 p-4 border border-gray-900 rounded-lg resize-none"
+            className="w-full h-32 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             placeholder="Paste your news headline or article here..."
             disabled={isLoading}
           />
@@ -101,42 +103,82 @@ export default function DetectionPage() {
             <button
               onClick={checkNews}
               disabled={!newsText.trim()}
-              className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-all shadow-md"
+              className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-colors font-medium"
             >
               <Search size={20} /> Check News
             </button>
           ) : (
             <div
-              className="w-full bg-blue-500 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-3 animate-pulse"
+              className="w-full bg-blue-500 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-3 animate-pulse font-medium"
             >
-              {steps[currentStep].icon}
+              <img src={steps[currentStep].icon} alt="step icon" className="w-5 h-5" />
               {steps[currentStep].text}
             </div>
           )}
-
         </div>
 
         {/* Error */}
-        {error && <p className="text-red-600 mb-4">{error}</p>}
+        {error && <p className="text-red-600 mb-4 font-medium">{error}</p>}
 
-        {/* Results */}
-        {result && (
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Analysis Results</h2>
-              <VerdictBadge verdict={result.verdict} />
-            </div>
-            <p className="mb-4 font-semibold">{result.confidence}% Confidence</p>
-            <p className="italic mb-4">{result.explanation}</p>
+        {/* Final Results with Animation */}
+        <AnimatePresence>
+          {result && (
+            <motion.div
+              key="result-card"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="bg-white border border-gray-200 rounded-xl p-8 shadow-md"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1, duration: 0.4 }}
+                className="flex items-center justify-between mb-6"
+              >
+                <h2 className="text-3xl font-bold text-gray-900">Analysis Results</h2>
+                <VerdictBadge verdict={result.verdict} />
+              </motion.div>
 
-            {/* Highlighted Keywords */}
-            <div className="mb-4">
-              <HighlightedText text={newsText} keywords={result.highlightedKeywords} />
-            </div>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="mb-4 font-semibold text-gray-700"
+              >
+                {result.confidence}% Confidence
+              </motion.p>
 
-            <SourceList sources={result.sources} onVisitSource={handleVisitSource} />
-          </div>
-        )}
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                className="italic mb-6 text-gray-600 leading-relaxed"
+              >
+                {result.explanation}
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.4 }}
+                className="mb-6"
+              >
+                {/* Use frozen analyzedText */}
+                <HighlightedText text={analyzedText} keywords={result.highlightedKeywords} />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+              >
+                <SourceList sources={result.sources}/>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

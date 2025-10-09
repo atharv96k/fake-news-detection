@@ -25,7 +25,7 @@ export default function FirefoxExtensionPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-6">
-      {/* Modern Heading */}
+       
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -36,19 +36,16 @@ export default function FirefoxExtensionPage() {
         <br />
         <span className="text-blue-500 pt-6">Instant Fact-Checks</span>
       </motion.h1>
-
-      {/* Subtitle */}
+ 
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
         className="text-lg text-gray-600 text-center mt-4 max-w-2xl mx-auto leading-relaxed"
-      >
-        Say goodbye to misinformation. Our Firefox Extension lets you check 
+      >Say goodbye to misinformation. Our Firefox Extension lets you check 
         credibility instantly without leaving the page — fast, reliable, and simple.
       </motion.p>
-
-      {/* Steps Section */}
+ 
       <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
         {steps.map((step, i) => (
           <motion.div
@@ -71,7 +68,7 @@ export default function FirefoxExtensionPage() {
         ))}
       </div>
 
-      {/* Install Button */}
+ 
       <div className="text-center mt-16">
         <motion.a
           href="https://addons.mozilla.org/en-US/firefox/addon/fake-news-detection-1-0/"
@@ -85,7 +82,6 @@ export default function FirefoxExtensionPage() {
         </motion.a>
       </div>
 
-      {/* Back to Home */}
       <div className="text-center mt-8">
         <motion.div
           whileHover={{ scale: 1.1, rotate: -2 }}

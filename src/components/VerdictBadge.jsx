@@ -1,7 +1,7 @@
 import { XCircle, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function VerdictBadge({ verdict }) {
-  // ✅ Normalize API verdict to badge keys
+ 
   const normalizedVerdict = (() => {
     if (!verdict) return 'uncertain';
     const v = verdict.toString().toLowerCase();
