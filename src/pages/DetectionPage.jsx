@@ -37,7 +37,7 @@ export default function DetectionPage() {
       setCurrentStep(prev => (prev + 1 < steps.length ? prev + 1 : prev));
     }, 1600); 
 
-    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://fake-news-detection-n9cs.onrender.com';
+    const API_BASE = import.meta.env.VITE_API_BASE_URL ;
     try {
       const response = await fetch(`${API_BASE}/fact-check`, {
         method: "POST",
