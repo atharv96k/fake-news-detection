@@ -8,68 +8,6 @@ import stringSimilarity from "string-similarity";
 import * as cheerio from "cheerio";
 import mysql from "mysql2/promise";
 
-function looksLikeClaim(query) {
-  // 1. Basic validation: ensure query is a non-empty string.
-  if (!query || typeof query !== "string") {
-    return false;
-  }
-
-  const text = query.trim().toLowerCase();
-
-  // 2. Filter out very short or non-alphabetic inputs.
-  const words = text.split(/\s+/);
-  if (words.length < 3 || !/[a-z]/.test(text)) {
-    return false;
-  }
-
-  // 🚫 2a. Ignore personal/self-descriptive statements
-  const personalPatterns = [
-    /\b(my name is|i am|this is me|we are|our name is|i have|i think|i believe)\b/,
-  ];
-  if (personalPatterns.some((p) => p.test(text))) {
-    return false;
-  }
-
-  // 3. Rule-based checks for NON-claims.
-
-  // 3a. Questions
-  const questionPatterns = [
-    /^\s*(what|who|when|where|why|how|is|are|was|were|do|does|did|will|can|could|should|would)\b/,
-    /\?\s*$/,
-  ];
-  if (questionPatterns.some((p) => p.test(text))) {
-    return false;
-  }
-
-  // 3b. Commands
-  const commandPatterns = [
-    /^\s*(tell|write|create|generate|explain|define|calculate|give|show|list|summarize|translate)\b/,
-  ];
-  if (commandPatterns.some((p) => p.test(text))) {
-    return false;
-  }
-
-  // 3c. Greetings
-  const greetingPatterns = [
-    /^\s*(hi|hello|hey|yo|ok(ay)?|thanks?(\s*you)?|bye|good\s*(morning|afternoon|evening))\s*[.!]?\s*$/i,
-  ];
-  if (greetingPatterns.some((p) => p.test(text))) {
-    return false;
-  }
-
-  // 4. Claim indicators
-  const claimIndicators = [
-    /\b(is|are|was|were|am)\b/,
-    /\b(has|have|had)\b/,
-    /\b(says?|said|states?|stated|reports?|reported|announces?|announced|claims?|claimed|declares?|declared)\b/,
-    /\b(will|won|lost|signed|approved|launched|inaugurated|discovered|developed|created|found|showed|revealed|confirmed)\b/,
-    /\b(government|company|study|report|scientists?|researchers?|minister|president|ceo)\b/,
-  ];
-
-  return claimIndicators.some((p) => p.test(text));
-}
-
-
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -84,10 +22,10 @@ const enrichedResults = new Map();
 
 // ✅ MySQL Connection (IST timezone enforced)
 const db = await mysql.createPool({
-  host: process.env.MYSQL_HOST ,
-  user: process.env.MYSQL_USER ,
-  password: process.env.MYSQL_PASSWORD ,
-  database: process.env.MYSQL_DATABASE ,
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
   timezone: "+05:30",
   waitForConnections: true,
   connectionLimit: 5,
@@ -171,14 +109,7 @@ app.post("/fact-check", async (req, res) => {
   if (!query) return res.status(400).json({ error: "Query is required" });
   console.log(`📰 Incoming claim: ${query}`);
 
-  if (!looksLikeClaim(query)) {
-    return res.json({
-      verdict: "Not a factual claim",
-      confidence_percentage: 0,
-      top_3_sources: [],
-      note: "This input doesn't appear to be a verifiable factual statement.",
-    });
-  }
+  // NOTE: looksLikeClaim check removed as requested — all queries will be processed.
 
   const claimForAI = query.split(":")[0].trim();
   const normalizedQuery = normalize(claimForAI);
@@ -231,15 +162,30 @@ app.post("/fact-check", async (req, res) => {
       ({ text } = await fetchWithTimeout(
         generateText({
           model: perplexity("sonar-pro"),
-          prompt: `Fact check the following claim and respond in JSON format:
-          {
-            "verdict": "True/Fake/Mixed",
-            "confidence_percentage": <number>,
-            "top_3_sources": [
-              { "title": "<title>", "url": "<url>", "summary": "<short placeholder summary>" }
-            ]
-          }
-          Claim: ${claimForAI}`,
+          prompt: `You are an expert fact-checking system.
+
+Given the following user input, first decide whether it appears to be a factual or news-type claim that can be verified.
+
+If it **is a verifiable claim**, perform a fact-check using your knowledge and available context, and return structured JSON like:
+{
+  "verdict": "True" | "False" | "Mixed",
+  "confidence_percentage": <number>,
+  "top_3_sources": [
+    { "title": "<title>", "url": "<url>", "summary": "<short summary>" }
+  ]
+}
+
+If it **is NOT a factual or verifiable claim** (for example, it's a greeting, opinion, question, or self-introduction),
+return the following JSON exactly:
+{
+  "verdict": "Uncertain",
+  "confidence_percentage": 0,
+  "top_3_sources": [],
+  "note": "The input does not appear to be a factual or verifiable statement."
+}
+
+Claim: ${claimForAI}`
+
         }),
         20000
       ));
@@ -264,8 +210,7 @@ app.post("/fact-check", async (req, res) => {
       };
     }
 
-    // ✅ IST timestamp insert
-    // ✅ Compute IST manually and store it
+    // ✅ IST timestamp insert (store IST datetime string)
     const istNow = getISTDateTime();
 
     await db.query(
@@ -277,7 +222,6 @@ app.post("/fact-check", async (req, res) => {
      created_at = VALUES(created_at)`,
       [normalizedQuery, JSON.stringify(data), Date.now(), istNow]
     );
-
 
     const requestId = Date.now().toString();
     enrichedResults.set(requestId, { status: "processing", data, timestamp: Date.now() });
@@ -311,7 +255,7 @@ app.post("/fact-check", async (req, res) => {
   }
 });
 
-// 🧹 Periodic cleanup every 5 minutes
+// 🧹 Periodic cleanup every 3 minutes
 setInterval(async () => {
   const CUTOFF = Date.now() - 3 * 60 * 1000;
   try {
