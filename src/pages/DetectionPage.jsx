@@ -3,7 +3,7 @@ import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Globe, BrainCircuit, Waypoints, Search } from "lucide-react";
+import { FileText, Globe, Waypoints, Search, Trophy } from "lucide-react";
 
 export default function DetectionPage() {
   const [newsText, setNewsText] = useState('');
@@ -14,11 +14,11 @@ export default function DetectionPage() {
   const [error, setError] = useState('');
   const intervalRef = useRef(null);
 
- const steps = [
+  const steps = [
     { text: "Processing Text", icon: <FileText className="w-5 h-5 text-white-500" /> },
     { text: "Fetching Evidence", icon: <Globe className="w-5 h-5 text-white-500" /> },
-    { text: "AI Analysis", icon: <BrainCircuit className="w-5 h-5 text-white-500" /> },
-    { text: "Final Verdict", icon: <Waypoints className="w-5 h-5 text-white-500" /> },
+    { text: "AI Analysis", icon: <Waypoints className="w-5 h-5 text-white-500" /> },
+    { text: "Final Verdict", icon: <Trophy className="w-5 h-5 text-white-500" /> },
   ];
 
   const ANIMATION_DURATION = steps.length * 1200; // 1200ms per step
@@ -35,9 +35,9 @@ export default function DetectionPage() {
 
     intervalRef.current = setInterval(() => {
       setCurrentStep(prev => (prev + 1 < steps.length ? prev + 1 : prev));
-    }, 1600); 
+    }, 1600);
 
-    const API_BASE = import.meta.env.VITE_API_BASE_URL ;
+    const API_BASE = import.meta.env.VITE_API_BASE_URL;
     try {
       const response = await fetch(`${API_BASE}/fact-check`, {
         method: "POST",
@@ -111,10 +111,11 @@ export default function DetectionPage() {
             <div
               className="w-full bg-blue-500 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-3 animate-pulse font-medium"
             >
-              <img src={steps[currentStep].icon} alt="step icon" className="w-5 h-5" />
+              {steps[currentStep].icon}
               {steps[currentStep].text}
             </div>
           )}
+
         </div>
 
         {/* Error */}
@@ -174,7 +175,7 @@ export default function DetectionPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.4 }}
               >
-                <SourceList sources={result.sources}  />
+                <SourceList sources={result.sources} />
               </motion.div>
             </motion.div>
           )}
