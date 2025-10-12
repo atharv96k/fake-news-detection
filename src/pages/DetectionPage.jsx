@@ -4,6 +4,7 @@ import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FileText, Globe, BrainCircuit, Trophy, Search } from "lucide-react";
 
 export default function DetectionPage() {
   const [newsText, setNewsText] = useState('');
@@ -14,11 +15,11 @@ export default function DetectionPage() {
   const [error, setError] = useState('');
   const intervalRef = useRef(null);
 
-  const steps = [
-    { text: "Processing Text", icon: "/icons/preprocess.svg" },
-    { text: "Fetching Evidence", icon: "/icons/search.svg" },
-    { text: "AI Analysis", icon: "/icons/ai.svg" },
-    { text: "Final Verdict", icon: "/icons/verdict1.svg" },
+ const steps = [
+    { text: "Processing Text", icon: <FileText className="w-6 h-6 text-black-500" /> },
+    { text: "Fetching Evidence", icon: <Globe className="w-6 h-6 text-black-500" /> },
+    { text: "AI Analysis", icon: <BrainCircuit className="w-6 h-6 text-black-500" /> },
+    { text: "Final Verdict", icon: <Trophy className="w-6 h-6 text-black-500" /> },
   ];
 
   const ANIMATION_DURATION = steps.length * 1200; // 1200ms per step
