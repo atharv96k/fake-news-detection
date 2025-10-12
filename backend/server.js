@@ -33,7 +33,7 @@ app.use(express.json());
  */
 app.use(
   cors({
-    origin: "https://truthlenss.vercel.app",
+    origin: "https://localhost:5173", // Allow localhost for development
   })
 );
 
