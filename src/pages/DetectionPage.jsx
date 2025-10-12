@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react';
-import { FileText, Globe, Zap, Trophy, Search } from 'lucide-react';
 import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
-import { motion, AnimatePresence } from 'framer-motion'; 
+import { motion, AnimatePresence } from 'framer-motion';
+import { FileText, Globe, BrainCircuit, Trophy, Search } from "lucide-react";
 
 export default function DetectionPage() {
   const [newsText, setNewsText] = useState('');
@@ -17,7 +17,7 @@ export default function DetectionPage() {
  const steps = [
     { text: "Processing Text", icon: <FileText className="w-6 h-6 text-black-500" /> },
     { text: "Fetching Evidence", icon: <Globe className="w-6 h-6 text-black-500" /> },
-    { text: "AI Analysis", icon: <Zap className="w-6 h-6 text-black-500" /> },
+    { text: "AI Analysis", icon: <BrainCircuit className="w-6 h-6 text-black-500" /> },
     { text: "Final Verdict", icon: <Trophy className="w-6 h-6 text-black-500" /> },
   ];
 
