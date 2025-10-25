@@ -175,7 +175,10 @@ export default function DetectionPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.4 }}
               >
-                <SourceList sources={result.sources} />
+                <SourceList
+                  sources={result.sources}
+                  onVisitSource={(url) => window.open(url, "_blank", "noopener,noreferrer")}
+                />
               </motion.div>
             </motion.div>
           )}
