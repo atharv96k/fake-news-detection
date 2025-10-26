@@ -89,7 +89,7 @@ export default function DetectionPage() {
             <Shield className="w-10 h-10 text-blue-500" />
             Fact Check Tool
           </h1>
-          <p className="text-md text-gray-600">
+          <p className="text-sm text-gray-600">
             Verify news with AI-powered analysis
           </p>
         </div>
