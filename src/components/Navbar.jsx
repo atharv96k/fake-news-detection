@@ -13,12 +13,18 @@ export default function Navbar() {
 
         <Link
           to="/detection"
-          className="px-5 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors shadow-sm flex items-center space-x-2"
+          className="px-5 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors shadow-sm flex items-center space-x-2
+             sm:px-5 sm:py-3 sm:text-base
+             px-3 py-2 text-sm"
         >
-          <img src={sparkIcon} alt="Spark icon" className="w-5 h-5" />
-          <span>Fact Check Now</span>
-        </Link> 
-        
+          <img
+            src={sparkIcon}
+            alt="Spark icon"
+            className="w-5 h-5 sm:w-5 sm:h-5 w-4 h-4"
+          />
+          <span className="sm:text-base text-sm">Fact Check Now</span>
+        </Link>
+
       </div>
     </nav>
   );
