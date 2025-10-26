@@ -34,7 +34,7 @@ export default function Homepage() {
             className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors shadow-sm flex items-center space-x-2"
           >
             <img src={sparkIcon} alt="Spark icon" className="w-5 h-5" />
-            <span>Try Free Now</span>
+            <span>Fact Check Now</span>
           </Link>
 
 
