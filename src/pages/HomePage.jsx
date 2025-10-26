@@ -29,15 +29,6 @@ export default function Homepage() {
         <motion.img src={heroImg} alt="Hero illustration" className="mx-auto mt-12 w-80"  whileHover={{ scale: 1.1 }}/>
 
         <div className="flex justify-center space-x-4 mt-10">
-          <Link
-            to="/detection"
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors shadow-sm flex items-center space-x-2"
-          >
-            <img src={sparkIcon} alt="Spark icon" className="w-5 h-5" />
-            <span>Fact Check Now</span>
-          </Link>
-
-
 
           {/* Firefox button */}
           <Link
