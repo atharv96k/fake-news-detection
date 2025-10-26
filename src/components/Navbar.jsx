@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'; 
- 
+import sparkIcon from "/icons/spark.svg"; 
 export default function Navbar() { 
   return ( 
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 px-6 py-3 shadow-sm"> 
