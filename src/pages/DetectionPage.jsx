@@ -3,11 +3,11 @@ import VerdictBadge from '../components/VerdictBadge';
 import HighlightedText from '../components/HighlightedText';
 import SourceList from '../components/SourceList';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Globe, Waypoints, Search, Trophy } from "lucide-react";
+import { FileText, Globe, Waypoints, Search, Trophy, Shield, CheckCircle, AlertCircle, Info } from "lucide-react";
 
 export default function DetectionPage() {
   const [newsText, setNewsText] = useState('');
-  const [analyzedText, setAnalyzedText] = useState(''); // Freeze analyzed text
+  const [analyzedText, setAnalyzedText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [result, setResult] = useState(null);
@@ -21,7 +21,7 @@ export default function DetectionPage() {
     { text: "Final Verdict", icon: <Trophy className="w-5 h-5 text-white-500" /> },
   ];
 
-  const ANIMATION_DURATION = steps.length * 1200; // 1200ms per step
+  const ANIMATION_DURATION = steps.length * 1200;
 
   const checkNews = async () => {
     if (!newsText.trim()) return;
@@ -29,7 +29,7 @@ export default function DetectionPage() {
     setError('');
     setResult(null);
     setCurrentStep(0);
-    setAnalyzedText(newsText); // Freeze input text
+    setAnalyzedText(newsText);
 
     const animationStart = Date.now();
 
@@ -49,7 +49,6 @@ export default function DetectionPage() {
 
       const data = await response.json();
 
-      // ✅ Ensure animation plays fully
       const elapsed = Date.now() - animationStart;
       if (elapsed < ANIMATION_DURATION) {
         await new Promise(resolve => setTimeout(resolve, ANIMATION_DURATION - elapsed));
@@ -81,21 +80,41 @@ export default function DetectionPage() {
     }
   };
 
-
   return (
-    <div className="min-h-screen bg-white py-10 px-6 relative">
-      <div className="max-w-3xl mx-auto px-6">
-        <h1 className="text-4xl font-black text-gray-900 mb-8 text-center">
-          Fact Check Tool
-        </h1>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-10 px-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-10"
+        >
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+            <Shield className="w-8 h-8 text-blue-500" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+            Fact Check Tool
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Verify news claims with AI-powered analysis
+          </p>
+        </motion.div>
 
-        {/* Input */}
-        <div className="bg-white border border-gray-200 rounded-xl p-8 mb-8">
+        {/* Input Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white border-2 border-gray-200 rounded-2xl p-8 mb-8 shadow-sm"
+        >
+          <label className="block text-sm font-semibold text-gray-700 mb-3">
+            Enter News Headline
+          </label>
           <textarea
             value={newsText}
             onChange={(e) => setNewsText(e.target.value)}
-            className="w-full h-32 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-            placeholder="Paste your news headline or article here..."
+            className="w-full h-40 p-4 border-2 border-gray-300 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-gray-900"
+            placeholder="Paste your news headline, article excerpt, or URL here to verify its authenticity..."
             disabled={isLoading}
           />
 
@@ -103,23 +122,95 @@ export default function DetectionPage() {
             <button
               onClick={checkNews}
               disabled={!newsText.trim()}
-              className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-2 transition-colors font-medium"
+              className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-4 rounded-xl mt-4 flex items-center justify-center gap-2 transition-all font-semibold text-lg shadow-md hover:shadow-lg"
             >
-              <Search size={20} /> Check News
+              <Search size={22} /> Analyze News
             </button>
           ) : (
-            <div
-              className="w-full bg-blue-500 text-white py-3 rounded-lg mt-4 flex items-center justify-center gap-3 animate-pulse font-medium"
-            >
+            <div className="w-full bg-blue-500 text-white py-4 rounded-xl mt-4 flex items-center justify-center gap-3 animate-pulse font-semibold text-lg">
               {steps[currentStep].icon}
               {steps[currentStep].text}
             </div>
           )}
-
-        </div>
+        </motion.div>
 
         {/* Error */}
-        {error && <p className="text-red-600 mb-4 font-medium">{error}</p>}
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center gap-3"
+          >
+            <AlertCircle className="w-5 h-5 text-red-500" />
+            <p className="text-red-700 font-medium">{error}</p>
+          </motion.div>
+        )}
+
+        {/* Empty State - Before Analysis */}
+        {!result && !isLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-10"
+          >
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                How It Works
+              </h2>
+              <p className="text-gray-600">
+                Our AI analyzes your text against trusted sources in seconds
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {[
+                { 
+                  icon: <CheckCircle className="w-8 h-8 text-green-500" />, 
+                  title: "True News", 
+                  desc: "Verified by credible sources" 
+                },
+                { 
+                  icon: <AlertCircle className="w-8 h-8 text-red-500" />, 
+                  title: "Fake News", 
+                  desc: "Contradicted by evidence" 
+                },
+                { 
+                  icon: <Info className="w-8 h-8 text-yellow-500" />, 
+                  title: "Unverified", 
+                  desc: "Insufficient information" 
+                },
+              ].map((item, i) => (
+                <div key={i} className="bg-white rounded-xl p-6 border border-gray-200 text-center">
+                  <div className="flex justify-center mb-3">{item.icon}</div>
+                  <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
+                  <p className="text-sm text-gray-600">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-white rounded-xl p-6 border-2 border-blue-200">
+              <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-blue-500" />
+                What You'll Get:
+              </h3>
+              <ul className="space-y-2 text-gray-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-1">✓</span>
+                  <span>Credibility score with confidence percentage</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-1">✓</span>
+                  <span>Detailed explanation of the verdict</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-1">✓</span>
+                  <span>Top 3 verified sources with summaries</span>
+                </li>
+              </ul>
+            </div>
+          </motion.div>
+        )}
 
         {/* Final Results with Animation */}
         <AnimatePresence>
@@ -130,7 +221,7 @@ export default function DetectionPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="bg-white border border-gray-200 rounded-xl p-8 shadow-md"
+              className="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -146,7 +237,7 @@ export default function DetectionPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.4 }}
-                className="mb-4 font-semibold text-gray-700"
+                className="mb-4 font-semibold text-gray-700 text-xl"
               >
                 {result.confidence}% Confidence
               </motion.p>
@@ -155,7 +246,7 @@ export default function DetectionPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.4 }}
-                className="italic mb-6 text-gray-600 leading-relaxed"
+                className="italic mb-6 text-gray-600 leading-relaxed text-lg"
               >
                 {result.explanation}
               </motion.p>
@@ -166,7 +257,6 @@ export default function DetectionPage() {
                 transition={{ delay: 0.4, duration: 0.4 }}
                 className="mb-6"
               >
-                {/* Use frozen analyzedText */}
                 <HighlightedText text={analyzedText} keywords={result.highlightedKeywords} />
               </motion.div>
 
