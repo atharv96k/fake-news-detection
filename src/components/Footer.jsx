@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="bg-gray-100 py-6">
       <div className="max-w-6xl mx-auto flex justify-center items-center space-x-4">
         <a 
-          href="https://github.com/atharv96k" 
+          href="https://github.com/atharv96k/fake-news-detection" 
           target="_blank" 
           rel="noopener noreferrer"
           className="flex items-center text-gray-700 hover:text-gray-900 transition-colors"
