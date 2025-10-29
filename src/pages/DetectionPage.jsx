@@ -85,7 +85,7 @@ export default function DetectionPage() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-3">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-3">
             <Shield className="w-10 h-10 text-blue-500" />
             Fact Check Tool
           </h1>
